@@ -1,13 +1,17 @@
 # Presentation app for UMCS
 
 ## List of available commands
+Install dependencies
+```sh
+npm install
+```
 
-Running development server
+Run development server
 ```sh
 npm run start
 ```
 
-Building and running server
+Build and run server
 ```sh
 npm run build
 npm run start-prod
