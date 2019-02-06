@@ -1,10 +1,12 @@
 // Calling all API's here
 import axios from 'axios';
 
-const url = 'http://localhost:5000'
+const URL = 'http://localhost:5000/'
+const INSTA = URL + 'instagram'
+const NEWS = URL + 'news'
 
 const getNews = () => {
-  axios.get(url)
+  axios.get(NEWS)
     .then(res => {
       const news = res.data;
       console.log(news);
@@ -12,7 +14,7 @@ const getNews = () => {
     })
     .catch(err => {
       console.log('error');
-      return {'message': 'error'};
+      return {'success': false};
     })
 }
 

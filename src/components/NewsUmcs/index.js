@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { Heading, Text, Image } from 'spectacle';
 
-const urlUMCS = 'http://localhost:5000';
+const urlUMCS = 'http://localhost:5000/news';
 
 class NewsUmcs extends React.Component {
   constructor() {

@@ -2,11 +2,16 @@ import React from 'react';
 import Clock from 'react-live-clock';
 import createTheme from 'spectacle/lib/themes/default';
 
-import { Deck, Heading, Slide, Text, Image, GoToAction } from 'spectacle';
+import { Deck, Heading, Slide, Text, Image,
+  // List, ListItem
+} from 'spectacle';
 // import NewsUmcs from './components/NewsUmcs';
 import umcsImage from './images/umcs.jpg';
-import getNews from './api';
+// import getNews from './api';
+import axios from 'axios';
+
 require('normalize.css');
+require('./UMCSnews.css');
 
 const theme = createTheme(
   {
@@ -14,10 +19,12 @@ const theme = createTheme(
     secondary: '#1F2022',
     tertiary: '#03A9FC',
     quaternary: '#CECECE',
+    type: '#fff',
   },
   {
     primary: 'Montserrat',
     secondary: 'Helvetica',
+    type: 'Bitter',
   }
 );
 
@@ -26,7 +33,10 @@ export default class Presentation extends React.Component {
     super(props);
 
     this.state = {
-      mylist: []
+      newsObj: {
+        success: false,
+        payload: []
+      }
     };
 
     this.slideImage = this.slideImage.bind(this);
@@ -34,14 +44,24 @@ export default class Presentation extends React.Component {
   }
 
   updateApi() {
-    const newNews = getNews();
-    this.setState({ myList: newNews });
+    axios.get('http://localhost:5000/news')
+    .then(res => {
+      const news = res.data;
+      this.setState({
+        newsObj: news
+      })
+    })
+    .catch(err => {
+      console.log('error');
+    })
   }
 
-
   componentDidMount() {
+    this.updateApi();
     let apiInterval = setInterval(this.updateApi, 10000);
-    this.setState({ apiInterval });
+    this.setState({ 
+      apiInterval, 
+    });
   }
 
   componentWillUnmount() {
@@ -57,12 +77,15 @@ export default class Presentation extends React.Component {
   }
 
   render() {
+    const { newsObj } = this.state;
+    const i = 0;
     return (
       <Deck
         transition={['zoom', 'slide']}
         theme={theme}
-        autoplay={true}
+        // autoplay={true}
         autoplayDuration={5000}
+        contentWidth={'90%'}
         progress={'bar'}
         controls={false}
       >
@@ -74,9 +97,23 @@ export default class Presentation extends React.Component {
             open the presentation/index.js file to get started
           </Text>
         </Slide>
-        <Slide transition={['zoom']} bgColor="primary">
-          123
-        </Slide>
+
+        { newsObj.success !== false &&
+          <Slide maxWidth="100" className="UMCS" transition={['fade']}>
+            <Text 
+            fill
+            bgColor={newsObj.payload[i].color}
+            textColor='type'
+            textFont='type'
+            >
+              {newsObj.payload[i].type}
+            </Text>
+            <Image width="900" src={newsObj.payload[i].url}  ></Image>
+            <Heading  textColor="secondary" className="HEAD" size={6}>
+              {newsObj.payload[i].title}
+            </Heading>
+          </Slide>
+        }
         <Slide transition={['fade']} bgColor="tertiary">
           <Heading size={6} textColor="secondary" caps>
             godzina
@@ -93,5 +130,3 @@ export default class Presentation extends React.Component {
     );
   }
 }
-
-// <NewsUmcs/>
